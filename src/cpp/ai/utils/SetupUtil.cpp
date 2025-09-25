@@ -22,8 +22,6 @@ int setupOpenGLWindow() {
     }
     glfwSetErrorCallback(error_callback);
 
-    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
-
     // hide window
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     window = glfwCreateWindow(640, 480, "Compute", nullptr, nullptr);
@@ -40,6 +38,8 @@ int setupOpenGLWindow() {
         std::cerr << "Failed to initialize GLEW" << std::endl;
         return -1;
     }
+
+    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
     return 0;
 }

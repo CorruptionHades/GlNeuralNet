@@ -1,6 +1,6 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.8)
 
-project ("GlNeuralNet")
+project("GlNeuralNet")
 
 file(GLOB_RECURSE SRC "src/cpp/*.cpp" "src/cpp/*.h")
 
@@ -9,7 +9,7 @@ file(GLOB_RECURSE SRC "src/cpp/*.cpp" "src/cpp/*.h")
 # glm
 # H:\C++\_Libraries_\glm
 # https://github.com/g-truc/glm
-set (GLM_INCLUDE_DIR "H:/C++/_Libraries_/glm")
+set(GLM_INCLUDE_DIR "H:/C++/_Libraries_/glm")
 
 # https://www.glfw.org/
 set(GLFW_INCLUDE_DIR "H:/C++/_Libraries_/glfw-3.4.bin.WIN64/include")
@@ -33,8 +33,8 @@ add_definitions(-DGLEW_STATIC)
 set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
 
 # Add source to this project's executable.
-# add_executable(GlNeuralNet ${SRC})
-add_library (GlNeuralNet SHARED ${SRC})
+add_executable(GlNeuralNet ${SRC})
+#add_library (GlNeuralNet SHARED ${SRC})
 
 include_directories(
         ${GLFW_INCLUDE_DIR}
@@ -60,8 +60,8 @@ install(TARGETS GlNeuralNet DESTINATION lib)
 install(DIRECTORY src/cpp/ DESTINATION include FILES_MATCHING PATTERN "*.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET GlNeuralNet PROPERTY CXX_STANDARD 20)
-endif()
+    set_property(TARGET GlNeuralNet PROPERTY CXX_STANDARD 20)
+endif ()
 
 add_custom_command(TARGET GlNeuralNet POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
