@@ -1,0 +1,30 @@
+#version 430 core
+layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) buffer DataA { float A[]; };
+layout(std430, binding = 1) buffer DataB { float B[]; };
+// Note: Result can be the same buffer as A for in-place operations
+layout(std430, binding = 2) buffer Result { float C[]; };
+
+uniform int u_op_type;   // 0: add, 1: subtract, 2: multiply (Hadamard)
+uniform int u_element_count;
+
+void main() {
+    uint index = gl_GlobalInvocationID.x;
+
+    if (index >= u_element_count) {
+        return;
+    }
+
+    switch (u_op_type) {
+        case 0: // Add
+            C[index] = A[index] + B[index];
+            break;
+        case 1: // Subtract
+            C[index] = A[index] - B[index];
+            break;
+        case 2: // Multiply
+            C[index] = A[index] * B[index];
+            break;
+    }
+}

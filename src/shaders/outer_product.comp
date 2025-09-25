@@ -1,0 +1,24 @@
+#version 430 core
+layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
+
+layout(std430, binding = 0) buffer VectorA { float A[]; }; // Delta (δ) vector
+layout(std430, binding = 1) buffer VectorB { float B[]; }; // Activation (a) vector
+layout(std430, binding = 2) buffer ResultMatrix { float C[]; }; // Gradient (∇W) matrix
+
+uniform int u_A_rows; // a.k.a. neuronCount
+uniform int u_B_cols; // a.k.a. inputSize
+
+void main() {
+    ivec2 pos = ivec2(gl_GlobalInvocationID.xy);
+
+    // Output matrix C has dimensions: (A_rows x B_cols)
+    if (pos.x >= u_B_cols || pos.y >= u_A_rows) {
+        return;
+    }
+
+    // Outer product: C[row][col] = A[row] * B[col]
+    float valA = A[pos.y];
+    float valB = B[pos.x];
+
+    C[pos.y * u_B_cols + pos.x] = valA * valB;
+}

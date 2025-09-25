@@ -1,0 +1,31 @@
+#version 430 core
+layout (local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) buffer InMatrix { float Z[]; };
+layout(std430, binding = 1) buffer OutMatrix { float A[]; };
+
+uniform int u_func_type; // 0: sigmoid, 1: sigmoid_derivative
+uniform int u_element_count;
+
+float sigmoid(float x) {
+    return 1.0 / (1.0 + exp(-x));
+}
+
+void main() {
+    uint index = gl_GlobalInvocationID.x;
+
+    if (index >= u_element_count) {
+        return;
+    }
+
+    float z = Z[index];
+    switch (u_func_type) {
+        case 0: // Sigmoid
+            A[index] = sigmoid(z);
+            break;
+        case 1: // Sigmoid Derivative: g'(z) = g(z) * (1 - g(z))
+            float s = sigmoid(z);
+            A[index] = s * (1.0 - s);
+            break;
+    }
+}
