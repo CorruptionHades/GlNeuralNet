@@ -13,10 +13,12 @@ public:
     GLuint ID;
 
     Shader() = default;
-    void loadComputeShader(const std::string& shaderPath);
+
+    void loadComputeShader(const std::string &shaderPath);
 
     void use() const;
-    void setInt(const std::string& name, int value) const;
+
+    void setInt(const std::string &name, int value) const;
 
     /**
      * Dispatches a compute shader.
@@ -27,7 +29,7 @@ public:
     void dispatch(GLuint group_x, GLuint group_y, GLuint group_z) const;
 
 private:
-    void checkCompileErrors(GLuint shader, const std::string& type);
+    void checkCompileErrors(GLuint shader, const std::string &type);
 };
 
 #endif

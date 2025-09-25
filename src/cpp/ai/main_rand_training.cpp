@@ -6,14 +6,13 @@
 #include <vector>
 #include <iomanip>
 
-// Include GLEW and GLFW if your setup utility doesn't
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include "nn/NeuralNetwork.h"
 #include "utils/SetupUtil.h"
 
-void print_vector_as_matrix(const std::vector<float>& vec, int rows, int cols) {
+void print_vector_as_matrix(const std::vector<float> &vec, const int rows, const int cols) {
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
             std::cout << std::fixed << std::setprecision(4) << vec[i * cols + j] << "  ";

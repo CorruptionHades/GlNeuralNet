@@ -6,17 +6,17 @@
 #include <random>
 #include <iomanip>
 
-Matrix::Matrix(const int r, const int c) : rows(r), cols(c) {
-    data.resize(r * c, 0.0f);
+Matrix::Matrix(const int rows, const int cols) : rows(rows), cols(cols) {
+    data.resize(rows * cols, 0.0f);
 }
 
-Matrix Matrix::random(int r, int c) {
-    Matrix m(r, c);
+Matrix Matrix::random(const int rows, const int cols) {
+    Matrix m(rows, cols);
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis(-1.0f, 1.0f);
+    std::uniform_real_distribution dis(-1.0f, 1.0f);
 
-    for (int i = 0; i < r * c; ++i) {
+    for (int i = 0; i < rows * cols; ++i) {
         m.data[i] = dis(gen);
     }
     return m;

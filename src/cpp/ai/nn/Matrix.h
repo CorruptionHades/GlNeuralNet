@@ -15,9 +15,9 @@ public:
     // Stored in a flat vector for easy GPU transfer
     std::vector<float> data;
 
-    Matrix(int r, int c);
+    Matrix(int rows, int cols);
 
-    static Matrix random(int r, int c);
+    static Matrix random(int rows, int cols);
     void print() const;
 };
 

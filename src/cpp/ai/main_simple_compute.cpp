@@ -16,8 +16,6 @@ int mainc() {
         return -1;
     }
 
-    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
-
     // --- 2. Load and Compile Shaders ---
     Shader matmulShader{};
     matmulShader.loadComputeShader("H:/C++/GlNeuralNet/src/shaders/matmul.comp");

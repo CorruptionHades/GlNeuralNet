@@ -15,44 +15,37 @@ class NeuralNetwork {
 public:
     float learningRate;
 
-    /**
-     * @brief Constructs the Neural Network, loading all necessary shaders.
-     */
     NeuralNetwork();
 
-    /**
-     * @brief Destructor that cleans up GPU buffer resources.
-     */
     ~NeuralNetwork();
 
     /**
-     * @brief Adds the first layer, establishing the network's input size.
+     * Adds input layer. Must be called first.
+     * @param inputSize The size of the input vector.
+     * @param neuronCount The number of neurons in this layer.
      */
     void addLayer(int inputSize, int neuronCount);
 
-    /**
-     * @brief Adds a subsequent hidden or output layer.
-     */
     void addLayer(int neuronCount);
 
     /**
      * @brief Performs a full forward pass through all layers.
      */
-    std::vector<float> predict(const std::vector<float>& inputData);
+    std::vector<float> predict(const std::vector<float> &inputData);
 
     /**
      * @brief Performs one full training step (forward pass, backpropagation, and parameter update).
      */
-    void train(const std::vector<float>& inputData, const std::vector<float>& targetData);
+    void train(const std::vector<float> &inputData, const std::vector<float> &targetData);
 
-    void saveToFile(const std::string& path) const;
+    void saveToFile(const std::string &path) const;
 
     /**
-     * @brief Loads a network from a file, completely reconstructing it.
+     * @brief Loads a network from a file
      * @param path The file path to load the model from.
      * @return A unique_ptr to the newly created NeuralNetwork instance.
      */
-    static std::unique_ptr<NeuralNetwork> loadFromFile(const std::string& path);
+    static std::unique_ptr<NeuralNetwork> loadFromFile(const std::string &path);
 
     // get input size
     [[nodiscard]] int getInputSize() const {
@@ -61,8 +54,8 @@ public:
         }
         return layerSizes.front();
     }
+
 private:
-    // The shaders are owned by the network and shared among layers via pointers
     Shader matmulShader;
     Shader matmulTransposeAShader;
     Shader elementwiseShader;
@@ -71,7 +64,7 @@ private:
     Shader sgdUpdateShader;
 
     // A list of all layers in the network
-    std::vector<std::unique_ptr<Layer>> layers;
+    std::vector<std::unique_ptr<Layer> > layers;
 
     // Buffers to hold the activations and errors of each layer.
     std::vector<GLuint> activationBuffers;
@@ -81,8 +74,9 @@ private:
     std::vector<int> layerSizes;
 
     // Disallow copying.
-    NeuralNetwork(const NeuralNetwork&) = delete;
-    NeuralNetwork& operator=(const NeuralNetwork&) = delete;
+    NeuralNetwork(const NeuralNetwork &) = delete;
+
+    NeuralNetwork &operator=(const NeuralNetwork &) = delete;
 };
 
 #endif

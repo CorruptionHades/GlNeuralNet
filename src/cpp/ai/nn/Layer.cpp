@@ -6,8 +6,8 @@
 #include "Matrix.h" // For initialization
 #include <iostream>
 
-Layer::Layer(int inSize, int outSize, Shader* matmul, Shader* matmul_T, Shader* elementwise,
-             Shader* activation, Shader* outer_prod, Shader* sgd_update)
+Layer::Layer(int inSize, int outSize, Shader *matmul, Shader *matmul_T, Shader *elementwise,
+             Shader *activation, Shader *outer_prod, Shader *sgd_update)
     : inputSize(inSize),
       neuronCount(outSize),
       matmulShader(matmul),
@@ -15,11 +15,10 @@ Layer::Layer(int inSize, int outSize, Shader* matmul, Shader* matmul_T, Shader* 
       elementwiseShader(elementwise),
       activationShader(activation),
       outerProductShader(outer_prod),
-      sgdUpdateShader(sgd_update)
-{
+      sgdUpdateShader(sgd_update) {
     // 1. Initialize weights and biases on the CPU first for random values
-    Matrix weights = Matrix::random(neuronCount, inputSize);
-    Matrix biases = Matrix(neuronCount, 1); // Biases initialized to zero
+    const Matrix weights = Matrix::random(neuronCount, inputSize);
+    const auto biases = Matrix(neuronCount, 1); // Biases initialized to zero
 
     std::cout << "Initializing Layer (" << inputSize << " -> " << neuronCount << ")..." << std::endl;
 
@@ -215,10 +214,10 @@ nlohmann::json Layer::toJson() const {
     return j;
 }
 
-void Layer::loadParameters(const nlohmann::json& j) {
+void Layer::loadParameters(const nlohmann::json &j) {
     // 1. Extract data from JSON into CPU-side vectors
-    std::vector<float> weights_data = j.at("weights").get<std::vector<float>>();
-    std::vector<float> biases_data = j.at("biases").get<std::vector<float>>();
+    std::vector<float> weights_data = j.at("weights").get<std::vector<float> >();
+    std::vector<float> biases_data = j.at("biases").get<std::vector<float> >();
 
     // Verify sizes to prevent buffer overflows
     if (weights_data.size() != neuronCount * inputSize || biases_data.size() != neuronCount) {

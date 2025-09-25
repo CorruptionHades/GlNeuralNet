@@ -29,20 +29,16 @@ public:
     GLuint gradBiasesBuffer;
     GLuint deltaBuffer; // To store the error δ for this layer
 
-    /**
-     * @brief Constructs a new Layer and initializes its GPU resources.
-     */
-    Layer(int inSize, int outSize, Shader* matmul, Shader* matmul_T, Shader* elementwise,
-          Shader* activation, Shader* outer_prod, Shader* sgd_update);
+    Layer(int inSize, int outSize, Shader *matmul, Shader *matmul_T, Shader *elementwise,
+          Shader *activation, Shader *outer_prod, Shader *sgd_update);
 
-    /**
-     * @brief Destructor to free all allocated GPU buffers.
-     */
     ~Layer();
 
-    /**
-     * @brief Performs the forward pass for this layer on the GPU.
-     */
+    // Disallow copying to prevent issues with GPU resource management.
+    Layer(const Layer &) = delete;
+
+    Layer &operator=(const Layer &) = delete;
+
     void forward(GLuint inputBuffer, GLuint outputBuffer);
 
     /**
@@ -65,21 +61,17 @@ public:
     void update(float learningRate);
 
     // saving/loading
-    nlohmann::json toJson() const;
-    void loadParameters(const nlohmann::json& j);
+    [[nodiscard]] nlohmann::json toJson() const;
+
+    void loadParameters(const nlohmann::json &j);
 
 private:
-    // Pointers to the shared shader programs, owned by the NeuralNetwork class.
-    Shader* matmulShader;
-    Shader* matmulTransposeAShader;
-    Shader* elementwiseShader;
-    Shader* activationShader;
-    Shader* outerProductShader;
-    Shader* sgdUpdateShader;
-
-    // Disallow copying to prevent issues with GPU resource management.
-    Layer(const Layer&) = delete;
-    Layer& operator=(const Layer&) = delete;
+    Shader *matmulShader;
+    Shader *matmulTransposeAShader;
+    Shader *elementwiseShader;
+    Shader *activationShader;
+    Shader *outerProductShader;
+    Shader *sgdUpdateShader;
 };
 
 #endif

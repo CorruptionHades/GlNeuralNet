@@ -8,9 +8,9 @@
 #include <GLFW/glfw3.h>
 
 
-GLFWwindow* window;
+GLFWwindow *window;
 
-void error_callback(int error, const char* description) {
+void error_callback(int error, const char *description) {
     std::cerr << "Error: " << description << std::endl;
 }
 
@@ -22,7 +22,9 @@ int setupOpenGLWindow() {
     }
     glfwSetErrorCallback(error_callback);
 
-    // We don't need a visible window, but we need an OpenGL context
+    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+
+    // hide window
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     window = glfwCreateWindow(640, 480, "Compute", nullptr, nullptr);
     if (!window) {
@@ -30,6 +32,7 @@ int setupOpenGLWindow() {
         glfwTerminate();
         return -1;
     }
+    // create context for shaders
     glfwMakeContextCurrent(window);
 
     glewExperimental = GL_TRUE;
@@ -42,7 +45,6 @@ int setupOpenGLWindow() {
 }
 
 void cleanupOpenGLWindow() {
-
     if (!window) return;
 
     glfwDestroyWindow(window);
