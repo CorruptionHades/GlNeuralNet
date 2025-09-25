@@ -25,6 +25,13 @@ generateMinMaxData(const int sampleCount) {
         }
     }
 
+    // create more of equal cases 1/10 of the data
+    for (int i = 0; i < sampleCount / 10; ++i) {
+        float a = static_cast<float>(rand() % 100);
+        inputs.push_back({a, a});
+        targets.push_back({1.0f, 1.0f}); // equal
+    }
+
     return {inputs, targets};
 }
 
@@ -60,9 +67,28 @@ int main() {
     };
 
     // Generate data
-    const auto minMaxData = generateMinMaxData(500);
-    const auto &inputs = minMaxData.first;
-    const auto &targets = minMaxData.second;
+    auto minMaxData = generateMinMaxData(500);
+    auto &inputs = minMaxData.first;
+    auto &targets = minMaxData.second;
+
+    const std::vector<std::vector<float> > testInputs = {
+        {4, 9}, // input2 > input1
+        {10, 3}, // input1 > input2
+        {5, 5}, // equal
+        {10000, 9999}, // input1 > input2
+        {-5, -3} // input2 > input1
+    };
+
+    // remove the test inputs from the training data if they exist
+    for (const auto &testInput: testInputs) {
+        for (size_t i = 0; i < inputs.size(); ++i) {
+            if (inputs[i] == testInput) {
+                inputs.erase(inputs.begin() + i);
+                targets.erase(targets.begin() + i);
+                break;
+            }
+        }
+    }
 
     std::cout << "Training data prepared with " << inputs.size() << " samples." << std::endl;
     //endregion
@@ -83,18 +109,14 @@ int main() {
     std::cout << "Training completed." << std::endl;
 
     // Test the network
-    std::vector<std::vector<float> > testInputs = {
-        {4, 9}, // input2 > input1
-        {10, 3}, // input1 > input2
-        {5, 5} // equal
-    };
     for (const auto &testInput: testInputs) {
         auto output = nn.predict(testInput);
         std::cout << "Input: " << testInput[0] << ", " << testInput[1]
                 << " | Output: [" << output[0] << ", " << output[1] << "]" << std::endl;
     }
 
-    cleanupOpenGLWindow();
+    nn.saveToFile("min_max_model.json");
 
+    cleanupOpenGLWindow();
     return 0;
 }
