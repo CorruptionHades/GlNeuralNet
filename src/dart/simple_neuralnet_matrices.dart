@@ -54,7 +54,8 @@ class Matrix {
   /// Performs element-wise multiplication (Hadamard Product).
   Matrix multiplyElementWise(Matrix other) {
     if (rows != other.rows || cols != other.cols) {
-      throw ArgumentError('Matrices must have the same dimensions for element-wise multiplication.');
+      throw ArgumentError(
+          'Matrices must have the same dimensions for element-wise multiplication.');
     }
     final result = Matrix(rows, cols);
     for (int i = 0; i < rows; i++) {
@@ -72,7 +73,8 @@ class Matrix {
     if (other is Matrix) {
       // Matrix-Matrix Multiplication
       if (cols != other.rows) {
-        throw ArgumentError('Matrix A columns must match Matrix B rows for multiplication.');
+        throw ArgumentError(
+            'Matrix A columns must match Matrix B rows for multiplication.');
       }
       final result = Matrix(rows, other.cols);
       for (int i = 0; i < result.rows; i++) {
@@ -96,7 +98,8 @@ class Matrix {
   /// Handles Matrix-Matrix addition.
   Matrix operator +(Matrix other) {
     if (rows != other.rows || cols != other.cols) {
-      throw ArgumentError('Matrices must have the same dimensions for addition.');
+      throw ArgumentError(
+          'Matrices must have the same dimensions for addition.');
     }
     return Matrix.fromList(List.generate(rows,
             (i) => List.generate(cols, (j) => data[i][j] + other.data[i][j])));
@@ -105,7 +108,8 @@ class Matrix {
   /// Handles Matrix-Matrix subtraction.
   Matrix operator -(Matrix other) {
     if (rows != other.rows || cols != other.cols) {
-      throw ArgumentError('Matrices must have the same dimensions for subtraction.');
+      throw ArgumentError(
+          'Matrices must have the same dimensions for subtraction.');
     }
     return Matrix.fromList(List.generate(rows,
             (i) => List.generate(cols, (j) => data[i][j] - other.data[i][j])));
@@ -113,12 +117,14 @@ class Matrix {
 
   @override
   String toString() {
-    return data.map((row) => row.map((e) => e.toStringAsFixed(4)).join(', ')).join('\n');
+    return data
+        .map((row) => row.map((e) => e.toStringAsFixed(4)).join(', '))
+        .join('\n');
   }
 }
 
 abstract class ActivationFunction {
-  Matrix forward(Matrix z);  // g(z)
+  Matrix forward(Matrix z); // g(z)
   Matrix backward(Matrix z); // g'(z)
 }
 
@@ -171,7 +177,8 @@ class Layer {
   Matrix backward(Matrix errorFromNextLayer) {
     // 1. Calculate the error for this layer (δ^[l])
     final activationDerivative = activation.backward(_lastWeightedSum);
-    final layerError = errorFromNextLayer.multiplyElementWise(activationDerivative);
+    final layerError = errorFromNextLayer.multiplyElementWise(
+        activationDerivative);
 
     // 2. Calculate gradients for this layer's parameters
     _gradWeights = layerError * _lastInput.transpose();
@@ -188,11 +195,12 @@ class Layer {
   }
 
   //region saving/loading
-  Map<String, dynamic> toJson() => {
-    'weights': weights.data,
-    'biases': biases.data,
-    'activation': activation.runtimeType.toString(),
-  };
+  Map<String, dynamic> toJson() =>
+      {
+        'weights': weights.data,
+        'biases': biases.data,
+        'activation': activation.runtimeType.toString(),
+      };
 
   static Layer fromJson(Map<String, dynamic> json) {
     final weights = Matrix.fromList(List<List<double>>.from(
@@ -205,14 +213,15 @@ class Layer {
         activation = Sigmoid();
         break;
       default:
-        throw ArgumentError('Unsupported activation function: ${json['activation']}');
+        throw ArgumentError(
+            'Unsupported activation function: ${json['activation']}');
     }
     final layer = Layer(weights.cols, weights.rows, activation);
     layer.weights = weights;
     layer.biases = biases;
     return layer;
   }
-  //endregion
+//endregion
 }
 
 class NeuralNetwork {
@@ -257,10 +266,11 @@ class NeuralNetwork {
   }
 
   //region saving/loading
-  Map<String, dynamic> toJson() => {
-    'learningRate': learningRate,
-    'layers': layers.map((l) => l.toJson()).toList(),
-  };
+  Map<String, dynamic> toJson() =>
+      {
+        'learningRate': learningRate,
+        'layers': layers.map((l) => l.toJson()).toList(),
+      };
 
   static NeuralNetwork fromJson(Map<String, dynamic> json) {
     final nn = NeuralNetwork(learningRate: json['learningRate']);
@@ -282,7 +292,7 @@ class NeuralNetwork {
     final jsonMap = jsonDecode(jsonStr);
     return NeuralNetwork.fromJson(jsonMap);
   }
-  //endregion
+//endregion
 }
 
 void main() {
@@ -312,7 +322,7 @@ void main() {
   final prediction = network.predict(input);
   print('Initial Prediction (ŷ):');
   print(prediction);
-  print('(Matches your calculated value of ~0.7466)');
+  print('(Matches calculated value of ~0.7466)');
 
   // 2. Perform one training step
   print('\nStep 2: Training (Forward, Backward, Update)');
@@ -323,9 +333,9 @@ void main() {
   print('\nStep 3: Verifying Updated Weights');
   print('\nNew Hidden->Output Weights (W^[2]):');
   print(network.layers[1].weights);
-  print('(Matches your calculated value of [0.5041, 0.6041])');
+  print('(Matches calculated value of [0.5041, 0.6041])');
 
   print('\nNew Input->Hidden Weights (W^[1]):');
   print(network.layers[0].weights);
-  print('(Matches your calculated value of [[1.0000, 3.0001], [2.0000, 4.0001]])');
+  print('(Matches calculated value of [[1.0000, 3.0001], [2.0000, 4.0001]])');
 }
